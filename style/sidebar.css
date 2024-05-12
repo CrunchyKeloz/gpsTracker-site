@@ -1,4 +1,30 @@
 @media (min-width: 768px) {
+
+  .sidebar #gpsTrackerButton {
+    margin-left: 70px; 
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
+
+  .sidebar #coordinatesTitle {
+    font-weight: bold;
+    padding: 8px 30px;
+  }
+
+  .sidebar #locationTitle {
+    font-weight: bold;
+    padding: 8px 32px;
+  }
+
+  .sidebar #windowSliderLabel {
+    font-size: 25px;
+    padding: 8px 32px;
+  }
+
+  .sidebar #windowSlider {
+    padding: 0px 30px;
+  }
+
   .sidebar {
     height: 100%;
     width: 0;
@@ -6,7 +32,7 @@
     z-index: 1;
     top: 0;
     left: 0;
-    background-color: #f2f2f2;
+    background-color: #f2efe9;
     overflow-x: hidden;
     transition: 0.5s;
     padding-top: 60px;
@@ -20,6 +46,14 @@
     display: block;
     transition: 0.3s;
   }
+
+  .sidebar #carData {
+    font-weight: bold;
+    padding: 2px 0px 20px;
+    text-align: center; 
+    margin: 0 auto; 
+}
+
   
   .sidebar a:hover {
     color: #f1f1f1;
@@ -45,9 +79,52 @@
   .openbtn:hover {
     background-color: #444;
   }
+
+  .sidebar #check1 {
+    padding: 40px 70px 20px;
+    font-size: 25px;
+  }
+
+  .sidebar #check2 {
+    padding: 0px 70px;
+    font-size: 25px;
+  }
+
 }
 
 @media (max-width: 768px) {
+
+  .sidebar #gpsTrackerButton {
+    margin-left: 70px; 
+    margin-top: 30px;
+  }
+
+  .sidebar #coordinatesTitle {
+    font-weight: bold;
+    position: absolute;
+    padding: 0px 30px;
+    top: 20px; 
+    right: 210px;
+  }
+
+
+  .sidebar #locationTitle {
+    font-weight: bold;
+    position: absolute;
+    padding: 0px 30px;
+    bottom: 100px; 
+    right: 0px;
+  }
+
+  .sidebar #windowSliderLabel {
+    font-size: 25px;
+    position: absolute;
+    padding: 0px 30px;
+    bottom: 10px; 
+    right: 130px;
+    color: white;
+  }
+
   .sidebar {
     height: 100%;
     width: 0;
@@ -70,6 +147,13 @@
     display: block;
     transition: 0.3s;
     opacity: 1;
+  }
+
+  .sidebar #carData {
+    font-weight: bold;
+    padding: 8px 100px;
+    margin: 0 auto; 
+    color: white;
   }
 
   .sidebar h2 {
@@ -110,6 +194,11 @@
   .sidebar .mobileHidden {
     color:black;
   }
+
+  .sidebar .form-check-label {
+    color: white;
+    font-weight: bold;
+  }
   
   .openbtn {
     font-size: 20px;
@@ -122,5 +211,17 @@
   
   .openbtn:hover {
     background-color: #444;
+  }
+
+  .sidebar #check1 {
+    padding: 40px 70px 20px;
+    font-size: 25px;
+    color: white;
+  }
+
+  .sidebar #check2 {
+    padding: 0px 70px;
+    font-size: 25px;
+    color: white;
   }
 }

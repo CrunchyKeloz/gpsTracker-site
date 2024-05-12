@@ -11,6 +11,8 @@ var latRange = 0.0;
 var longRange = 0.0;
 var timeMarker = null;
 var windowCoords = [];
+let truckMode = "1";
+let lineColor = 'blue';
 
 function timeMessage(unixTimeSeconds) {
     const unixTimeMilliseconds = unixTimeSeconds * 1000;
@@ -46,8 +48,8 @@ var control = L.Control.geocoder({
 
 
 if (seed2 === null) {
-    seed2 = L.marker([10.991865,  -74.773420], { icon: APPicon }).addTo(map)
-        .bindPopup('Select a time window, then <br>' + 'search or select a location <br>' + 'on the map')
+    seed2 = L.marker([10.983594, -74.804334], { icon: APPicon }).addTo(map)
+        .bindPopup('Select the time range in <br>' + 'the upper-center calendar 📅 <br>' + '<br>' + 'Then, you can search <br>' + 'a place in the upper <br>' + 'right corner of the map  🔎 <br>' +  '<br>' + 'Or just click on the map 👆🏻 <br>' + '<br>' + 'You can click the upper <br>' + 'left button ☰ to select <br>' + 'the vehicle, and use the<br>' + 'slide to see the timeline ⌚'  )
         .openPopup();
 }
 
@@ -82,6 +84,7 @@ function applyCalendar() {
         method: 'POST',
         data: {
             startTime: startTimestamp,
+            truck: truckMode,
             endTime: endTimestamp
         },
         success: function(response) {
@@ -123,7 +126,7 @@ function applyCalendar() {
 
             });
 
-            route = L.polyline(latLngs, {color: 'blue'}).addTo(map);
+            route = L.polyline(latLngs, {color: lineColor}).addTo(map);
             map.fitBounds(route.getBounds());
             
         },
@@ -139,6 +142,7 @@ function fetchCoordinates(startTimestamp,endTimestamp,latRange,longRange) {
         method: 'POST',
         data: {
             startTime: startTimestamp,
+            truck: truckMode,
             endTime: endTimestamp
         },
         success: function(response) {
@@ -164,11 +168,12 @@ function fetchCoordinates(startTimestamp,endTimestamp,latRange,longRange) {
                 var coords = feature.geometry.coordinates;
                 var tstamp = parseFloat(feature.properties.timestamp);
                 var date = feature.properties.date;
+                var carData = feature.properties.car_data;
                 if ((coords[0] >= (longRange - 0.00225)) && (coords[0] <= (longRange + 0.00225))) {
                     if ((coords[1] >= (latRange - 0.00225)) && (coords[1] <= (latRange + 0.00225))) {
                         var latLng = L.latLng(coords[1], coords[0]);
                         latLngs.push(latLng);
-                        var point = [coords[1], coords[0], tstamp];
+                        var point = [coords[1], coords[0], tstamp, carData];
                         windowCoords.push(point)
                     }
                 }
@@ -184,13 +189,14 @@ function fetchCoordinates(startTimestamp,endTimestamp,latRange,longRange) {
                 var slider = $('<input type="range" class="form-range "id="myRange" value="0" min="0" max="' + maxValue + '" value="50">');
                 $('#windowSlider').append(slider);
             }
-            route = L.polyline(latLngs, {color: 'blue'}).addTo(map);
+            route = L.polyline(latLngs, {color: lineColor}).addTo(map);
         }
     });
 }
 
 
 control.on('markgeocode', function(e) {
+    openNav()
     var location = e.geocode.center;
     latitude = location.lat;
     longitude = location.lng;
@@ -216,8 +222,8 @@ control.on('markgeocode', function(e) {
     var boundView = [viewLeftCorner, viewRightCorner];
 
     L.rectangle(bounds, {
-        color: "blue", 
-        fillColor:"blue",
+        color: lineColor, 
+        fillColor: lineColor,
         fillOpacity: 0.2
     }).addTo(map);
     map.fitBounds(boundView);
@@ -226,6 +232,7 @@ control.on('markgeocode', function(e) {
 
 
 function addMarker(e) {
+    openNav()
     var latitude = e.latlng.lat;
     var longitude = e.latlng.lng;
     removeMarkers();
@@ -243,8 +250,8 @@ function addMarker(e) {
     var boundView = [viewLeftCorner, viewRightCorner];
 
     L.rectangle(bounds, {
-        color: "blue", 
-        fillColor:"blue",
+        color: lineColor, 
+        fillColor: lineColor,
         fillOpacity: 0.2
     }).addTo(map);
     map.fitBounds(boundView);
@@ -306,9 +313,31 @@ $(document).ready(function() {
             }
         });
         var marker = L.marker([windowCoords[sliderValue][0],windowCoords[sliderValue][1]],{ icon: APPicon }).addTo(map)
-        .bindPopup('Marked at ' + timeMessage(windowCoords[sliderValue][2]))
+        .bindPopup('Marked at ' + timeMessage(windowCoords[sliderValue][2]) + '<br>RPM: ' + windowCoords[sliderValue][3])
         .openPopup();
     });
 });
+
+$(document).ready(function() {
+    $('#truck1').change(function() {
+        removeMarkers();
+        truckMode = "1";
+        console.log("Mode " + truckMode);
+        lineColor = 'blue';
+        applyCalendar();
+        $('#windowSliderLabel').empty();
+        $('#windowSlider').empty(); 
+        
+    });
+    $('#truck2').change(function() {
+        removeMarkers();
+        truckMode = "2";
+        console.log("Mode " + truckMode);
+        lineColor = 'green';
+        applyCalendar();
+        $('#windowSliderLabel').empty();
+        $('#windowSlider').empty(); 
+    });
+  });
 
 map.on('click',addMarker);
